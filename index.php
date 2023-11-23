@@ -1,6 +1,6 @@
 <?php
-include_once '../Controller/GeneralController.php';
-importAndRank('../Resources/data.csv');
+include_once 'Controller/GeneralController.php';
+importAndRank('Resources/data.csv');
 $data = getAllUserData();
 ?>
 

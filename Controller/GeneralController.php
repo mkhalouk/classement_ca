@@ -1,7 +1,7 @@
 <?php
-include_once '../Utils/utils.php';
-require_once '../Resources/db.php';
-include_once '../Model/UserModel.php';
+include_once 'Utils/utils.php';
+require_once 'Resources/db.php';
+include_once 'Model/UserModel.php';
 
 /**
  * Trier les données par chiffres d'affaire de manière decroissante
