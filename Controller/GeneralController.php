@@ -1,22 +1,22 @@
 <?php
-include_once '../Resources/utils.php';
+include_once '../Utils/utils.php';
 require_once '../Resources/db.php';
+include_once '../Model/UserModel.php';
 
 /**
  * Trier les données par chiffres d'affaire de manière decroissante
  * @param array $data Donnees
  * @return array Donnees triees
  */
-function calculateRank($data)
-{
-  $dataSorted = sortDesc($data);
+function calculateRank($data) {
+  $dataSorted = sortDesc($data, 'ca');
   $rank = 1;
   foreach ($dataSorted as $key => $value) {
-    $data[$key]['ca'] = $rank;
+    $dataSorted[$key]['rank'] = $rank;
     $rank++;
   }
 
-  return $data;
+  return $dataSorted;
 }
 
 /**
@@ -24,8 +24,7 @@ function calculateRank($data)
  * @param string $path Chemin du fichier csv
  * @return void
  */
-function importAndRank($path)
-{
+function importAndRank($path) {
   $data = readCsv($path);
   $rankedData = calculateRank($data);
 
@@ -37,10 +36,22 @@ function importAndRank($path)
 
   // Insértion des nouvelles données
   foreach ($rankedData as $entry) {
-    $db->exec("INSERT INTO users (username, ca, rank) VALUES ('{$entry['username']}', {$entry['ca']}, {$entry['rank']})");
-  }
+    $query = "INSERT INTO users (username, ca, rank) VALUES ('{$entry['username']}', {$entry['ca']}, {$entry['rank']})";
+    $result = $db->exec($query);
 
-  // Retourner les données au format JSON
-  header('Content-Type: application/json');
-  echo json_encode($rankedData);
+    if ($result === false) {
+        die("Error executing query: $query\n");
+    }
+  }
+}
+
+/**
+ * Obtenir les données de la base de données
+ * @return array
+ */
+function getAllUserData() {
+  $model = new UserModel();
+  $data = $model->getAllUserData();
+
+  return $data;
 }

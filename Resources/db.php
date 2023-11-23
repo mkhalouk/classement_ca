@@ -5,7 +5,7 @@ class Database
     private static $instance;
     private $db;
     private function __construct() {
-        $this->db = new SQLite3('ranking.db');
+        $this->db = new SQLite3('../Resources/ranking.db');
         $this->initializeDatabase();
     }
 
